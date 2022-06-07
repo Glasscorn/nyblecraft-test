@@ -17,7 +17,7 @@ const pool = mysql2.createPool({
 
 let PDFDocument = require('pdfkit')
 
-const PORT = 5500
+const PORT = process.env.PORT || 3000
 
 const app = express()
 
