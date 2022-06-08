@@ -84,12 +84,16 @@ app.post('/upload/:id', async (req,res,next) => {
 
 app.get('/pdf/:id', async (req,res) => {
     const data = await pool.query(`SELECT * FROM names WHERE id = ${req.params.id}`).then(data => data[0][0])
-    let doc = new PDFDocument()
-    await doc.pipe(fs.createWriteStream(`pdf/${data.id}_${data.firstName}_${data.lastName}.pdf`))
-    await doc.image(`./uploads/${data.image}`,100,100,{align: 'center'})
-    await doc.text(`${data.firstName} ${data.lastName}`)
-    await doc.end()
-    res.send(`<a href="${data.id}_${data.firstName}_${data.lastName}.pdf" target="_blank">Open</a>`)
+    if(data.image){
+        let doc = new PDFDocument()
+        await doc.pipe(fs.createWriteStream(`pdf/${data.id}_${data.firstName}_${data.lastName}.pdf`))
+        await doc.image(`./uploads/${data.image}`,100,100,{align: 'center'})
+        await doc.text(`${data.firstName} ${data.lastName}`)
+        await doc.end()
+        res.send(`<a href="${data.id}_${data.firstName}_${data.lastName}.pdf" target="_blank">Open</a>`)
+    } else {
+        res.send(`<p>Error - Empty avatar<br><a href="/setAvatar/${data.id}">Set</a><br><a href="/main">Back</a></p>`)
+    }
 })
 
 app.post('/add', async (req,res) => {
