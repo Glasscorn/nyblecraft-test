@@ -85,11 +85,6 @@ app.post('/upload/:id', async (req,res,next) => {
 app.get('/pdf/:id', async (req,res) => {
     const data = await pool.query(`SELECT * FROM names WHERE id = ${req.params.id}`).then(data => data[0][0])
     let doc = new PDFDocument()
-    doc.pipe(fs.createWriteStream(`pdf/${data.id}_${data.firstName}_${data.lastName}.pdf`))
-    doc.image(`./uploads/${data.image}`,100,100,{align: 'center'})
-    doc.text(`${data.firstName} ${data.lastName}`)
-    doc.end()
-    res.send(JSON.stringify(true))
     await doc.pipe(fs.createWriteStream(`pdf/${data.id}_${data.firstName}_${data.lastName}.pdf`))
     await doc.image(`./uploads/${data.image}`,100,100,{align: 'center'})
     await doc.text(`${data.firstName} ${data.lastName}`)
