@@ -90,6 +90,11 @@ app.get('/pdf/:id', async (req,res) => {
     doc.text(`${data.firstName} ${data.lastName}`)
     doc.end()
     res.send(JSON.stringify(true))
+    await doc.pipe(fs.createWriteStream(`pdf/${data.id}_${data.firstName}_${data.lastName}.pdf`))
+    await doc.image(`./uploads/${data.image}`,100,100,{align: 'center'})
+    await doc.text(`${data.firstName} ${data.lastName}`)
+    await doc.end()
+    res.send(`<a href="${data.id}_${data.firstName}_${data.lastName}.pdf" target="_blank">Open</a>`)
 })
 
 app.post('/add', async (req,res) => {
