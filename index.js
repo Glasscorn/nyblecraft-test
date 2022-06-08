@@ -1,18 +1,14 @@
 const express = require('express')
-
 const multer = require('multer')
-
 const mysql2 = require('mysql2/promise')
-
 const bodyParser = require('body-parser')
-
 const fs = require('fs')
 
 const pool = mysql2.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'users',
-    password: ''
+    host: 'eu-cdbr-west-02.cleardb.net',
+    user: 'bd9d0a8be9627e',
+    database: 'heroku_c7a165ef4d4072c',
+    password: '91a457cb'
 })
 
 let PDFDocument = require('pdfkit')
@@ -25,6 +21,17 @@ app.use(express.static(__dirname))
 app.use(bodyParser.urlencoded())
 app.use(multer({dest:"uploads"}).single("image"))
 app.use(express.json())
+app.use((req,res,next) => {
+    const auth = {login: 'admin', password: '[jxedye,ktrhfan'}
+    const b64auth = (req.headers.authorization || '').split(' ')[1] || ''
+    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+    if (login && password && login === auth.login && password === auth.password) {
+      return next()
+    }
+    res.set('WWW-Authenticate', 'Basic realm="401"')
+    res.status(401).send('Check auth at ')
+  })
+
 
 app.get('/addUser', (req,res) => {
     res.send(`
