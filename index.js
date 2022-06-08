@@ -9,10 +9,10 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 
 const pool = mysql2.createPool({
-    host: 'localhost',
-    user: 'root',
-    database: 'users',
-    password: ''
+    host: 'eu-cdbr-west-02.cleardb.net',
+    user: 'bd9d0a8be9627e',
+    database: 'heroku_c7a165ef4d4072c',
+    password: '91a457cb'
 })
 
 let PDFDocument = require('pdfkit')
